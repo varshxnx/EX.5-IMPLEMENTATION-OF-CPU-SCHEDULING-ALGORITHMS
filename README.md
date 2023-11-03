@@ -1,454 +1,247 @@
-# EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS
+# OS-EX.12-IMPLEMENTATION-OF-FILE-ALLOCATION-METHODS
+## CONTIGUOUS ALLOCATION
+## AIM:
+To implement Contiguous File allocation Methods in C program.
 
-# AIM: 
-To implement First-Come-First-Serve (FCFS) Scheduling
+## ALGORITHM:
+1. Define a function recurse to allocate files on a disk using the First Fit technique, taking an array to represent free disk blocks.
+2. In the recurse function, prompt the user to enter the starting block and length of a file to allocate.
+3. Check if consecutive blocks starting from the user-defined block are free, allocate the file if they are, and print the allocated blocks.
+4. If any of the blocks are not free, indicate that the file cannot be allocated contiguously.
+5. After processing one file allocation, ask the user if they want to allocate more files; if yes, call the recurse function recursively; otherwise, exit the program.
 
-# ALGORITHM:
-Start the process Accept the number of processes in the ready queue For each process in the ready queue, do the following: Accept the process ID and burst time Calculate the waiting time for the current process Calculate the turnaround time for the current process Display the process ID, burst time, waiting time and turnaround time for the current process Calculate the average waiting time and average turnaround time Stop the process
-
-# PROGRAM:
-```
-#include<stdio.h>
-int main()
-{
-	int bt[20],p[20],wt[20],tat[20],i,j,n,total=0,pos,temp; float
-	avg_wt,avg_tat;
-	printf("Enter number of process:");
-	scanf("%d",&n);
-	printf("\nEnter Burst Time:\n");
-	for(i=0;i<n;i++)
-	{
-		printf("p % d:",i+1);
-		scanf("%d",&bt[i]);
-		p[i]=i+1; //contains process number
-	}
-	wt[0]=0; //waiting time for first process will be zero
-	//calculate waiting time
-	for(i=1;i<n;i++)
-	{
-		wt[i]=0;
-		for(j=0;j<i;j++)
-		wt[i]+=bt[j];
-		total+=wt[i];
-	}
-	avg_wt=(float)total/n; //average waiting time
-	total=0;
-	printf("\nProcess\t Burst Time \tWaiting Time\tTurnaround Time");
-	for(i=0;i<n;i++)
-	{
-		tat[i]=bt[i]+wt[i]; //calculate turnaround time
-		total+=tat[i];
-		printf("\np%d\t\t %d\t\t %d\t\t\t%d",p[i],bt[i],wt[i],tat[i]);
-	}
-	avg_tat=(float)total/n; //average turnaround time
-	printf("\n\nAverage Waiting Time=%f",avg_wt);
-	printf("\nAverage Turnaround Time=%f\n",avg_tat);
-}
-```
-
-# OUTPUT:
-![image](https://github.com/Thanikasreeb/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/119557910/33ed6afc-44ad-4119-8f32-c9978b8501da)
-
-# RESULT: 
-First-Come-First-Serve Scheduling is implemented successfully.
-
-# SHORTEST JOB FIRST PREEMPTIVE SCHEDULING 
-
-# AIM: 
-To implement Shortest Job First (SJF) Preemptive Scheduling
-
-# ALGORITHM:
-Start the process Get the number of processes to be inserted Sort the processes according to the burst tiine and allocate the one with shortest burst to execute first If two process have same burst length then FCFS scheduling algorithm is used Calculate the total and average waiting time and turn around time Display the values Stop the process
-
-# PROGRAM:
-```
+## PROGRAM:
+```C
 #include <stdio.h>
-  
-int main() 
+#include <stdlib.h>
+void recurse(int files[])
 {
-      int arrival_time[10], burst_time[10], temp[10];
-      int i, smallest, count = 0, time, limit;
-      double wait_time = 0, turnaround_time = 0, end;
-      float average_waiting_time, average_turnaround_time;
-      printf("nEnter the Total Number of Processes:t");
-      scanf("%d", &limit); 
-      printf("nEnter Details of %d Processesn", limit);
-      for(i = 0; i < limit; i++)
-      {
-            printf("nEnter Arrival Time:t");
-            scanf("%d", &arrival_time[i]);
-            printf("Enter Burst Time:t");
-            scanf("%d", &burst_time[i]); 
-            temp[i] = burst_time[i];
-      }
-      burst_time[9] = 9999;  
-      for(time = 0; count != limit; time++)
-      {
-            smallest = 9;
-            for(i = 0; i < limit; i++)
-            {
-                  if(arrival_time[i] <= time && burst_time[i] < burst_time[smallest] && burst_time[i] > 0)
-                  {
-                        smallest = i;
-                  }
-            }
-            burst_time[smallest]--;
-            if(burst_time[smallest] == 0)
-            {
-                  count++;
-                  end = time + 1;
-                  wait_time = wait_time + end - arrival_time[smallest] - temp[smallest];
-                  turnaround_time = turnaround_time + end - arrival_time[smallest];
-            }
-      }
-      average_waiting_time = wait_time / limit; 
-      average_turnaround_time = turnaround_time / limit;
-      printf("nnAverage Waiting Time:t%lfn", average_waiting_time);
-      printf("Average Turnaround Time:t%lfn", average_turnaround_time);
-      return 0;
-}
-```
-
-# OUTPUT:
-![image](https://github.com/Thanikasreeb/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/119557910/7d962246-25d3-4468-bb89-f8c04cac40d1)
-
-# RESULT:
-Shortest Job First (SJF) preemptive scheduling is implemented successfully.
-
-# SHORTEST JOB FIRST NON - PREEMPTIVE SCHEDULING
-
-# AIM: 
-To implement Shortest Job First (SJF) Non-Preemptive Scheduling
-
-# ALGORITHM:
-Start the process Get the number of processes to be inserted Get the corresponding priority of processes Sort the processes according to the priority and allocate the one with highest priority to execute first If two process have same priority then FCFS scheduling algorithm is used Calculate the total and average waiting time and turnaround time Display the values Stop the process
-
-# PROGRAM:
-```
-#include<stdio.h>
- int main()
-{
-    int bt[20],p[20],wt[20],tat[20],i,j,n,total=0,pos,temp;
-    float avg_wt,avg_tat;
-    printf("Enter number of process:");
-    scanf("%d",&n);
-  
-    printf("\nEnter Burst Time:");
-    for(i=0;i<n;i++)
+    int flag = 0, startBlock, len, j, k, ch;
+    printf("Enter the starting block and the length of the files: ");
+    scanf("%d%d", &startBlock, &len);
+    for (j = startBlock; j < (startBlock + len); j++)
     {
-        printf("\np%d:",i+1);
-        scanf("%d",&bt[i]);
-        p[i]=i+1;         
+        if (files[j] == 0)
+            flag++;
     }
-  
-   //sorting of burst times
-    for(i=0;i<n;i++)
+    if (len == flag)
     {
-        pos=i;
-        for(j=i+1;j<n;j++)
+        for (int k = startBlock; k < (startBlock + len); k++)
         {
-            if(bt[j]<bt[pos])
-                pos=j;
+            if (files[k] == 0)
+            {
+                files[k] = 1;
+                printf("%d\t%d\n", k, files[k]);
+            }
         }
-  
-        temp=bt[i];
-        bt[i]=bt[pos];
-        bt[pos]=temp;
-  
-        temp=p[i];
-        p[i]=p[pos];
-        p[pos]=temp;
+        if (k != (startBlock + len - 1))
+            printf("The file is allocated to the disk\n");
     }
-   
-    wt[0]=0;            
-  
-   
-    for(i=1;i<n;i++)
-    {
-        wt[i]=0;
-        for(j=0;j<i;j++)
-            wt[i]+=bt[j];
-  
-        total+=wt[i];
-    }
-  
-    avg_wt=(float)total/n;      
-    total=0;
-  
-    printf("\nProcess    Burst Time    Waiting Time   Turn around Time"); 
-    for(i=0;i<n;i++)
-    {
-        tat[i]=bt[i]+wt[i];   
-        total+=tat[i];
-        printf("\n%d   %d   %d   %d",p[i],bt[i],wt[i],tat[i]);
-    }
-  
-    avg_tat=(float)total/n;    
-    printf("\nAverage Waiting Time=%f",avg_wt);
-    printf("\nAverage Turnaround Time=%f",avg_tat);
+    else
+    printf("The file is not allocated to the disk\n");
+    printf("Do you want to enter more files?\n");
+    printf("Press 1 for YES, 0 for NO: ");
+    scanf("%d", &ch);
+    if (ch == 1)
+        recurse(files);
+    else
+        exit(0);
+    return;
 }
-```
-
-# OUTPUT:
-![image](https://github.com/Thanikasreeb/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/119557910/d90a9f5e-6e8b-404d-8dce-3343938fe8fd)
-
-# RESULT: 
-Shortest Job First (SJF) Non-preemptive scheduling is implemented successfully.
-
-# ROUND ROBIN SCHEDULING
-
-# AIM:
-To implement Round Robin (RR) Scheduling
-
-# ALGORITHM:
-Start the process Get the number of elements to be inserted Get the value for burst time for individual processes Get the value for time quantum Make the CPU scheduler go around the ready queue allocating CPU to each process for the time interval specified Make the CPU scheduler pick the first process and set time to interrupt after quantum. And after it's expiry dispatch the process If the process has burst time less than the time quantum then the process is released by the CPU If the process has burst time greater than time quantum then it is interrupted by the OS and the process is put to the tail of ready queue and the schedule selects next process from head of the queue Calculate the total and average waiting time and turnaround time Display the results
-
-# PROGRAM:
-```
-#include<stdio.h>
 int main()
 {
-    int st[10],bt[10],wt[10],tat[10],n,tq; 
-    int i,count=0,swt=0,stat=0,temp,sq=0;
-    float awt,atat;
-    printf("Enter the number of processes :");
-    scanf("%d",&n);
-    printf("\nEnter the burst time of each process: ");
-    for(i=0;i<n;i++)
-    {
-        printf("\np%d",i+1);
-        scanf("%d",&bt[i]);
-        st[i]=bt[i];
-        
-    }
-    printf("\nenter the time quantum");
-    scanf("%d",&tq);
-    while(1)
-    {
-        for(i=0,count=0;i<n;i++)
-        {
-            temp=tq;
-            if(st[i]==0)
-            {
-                count++;
-                continue;
-                
-            }
-            if(st[i]>tq)
-            st[i]=st[i]-tq;
-            else
-            if(st[i]>=0)
-            {
-                temp=st[i];
-                st[i]=0;
-                
-            }
-            sq=sq+temp;
-            tat[i]=sq;
-            
-        }
-        if(n==count)
-        break;
-        
-    }
-    for(i=0;i<n;i++)
-    {
-        wt[i]=tat[i]-bt[i];
-        swt=swt+wt[i];
-        stat=stat+tat[i];
-        
-    }
-    awt=(float)swt/n;
-    atat=(float)stat/n;
-    printf("\nprocess no\t burst time\t waiting time\t turnaround time\n");
-    for(i=0;i<n;i++)
-    printf("\n%d\t\t %d\t\t %d\t\t %d\n",i+1,bt[i],wt[i],tat[i]); 
-    printf("\nAverage waiting time=%f\nAverage turn around time=%f",awt,atat);
-}
-```
-
-# OUTPUT:
-![image](https://github.com/Thanikasreeb/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/119557910/c7307f7b-602c-4803-840b-2abd6e826de7)
-
-# RESULT: 
-Round Robin (RR) Scheduling is implemented successfully.
-
-# PRIORITY PREEMPTIVE SCHEDULING
-
-# AIM: 
-To implement Priority Preemptive Scheduling
-
-# ALGORITHM:
-Start the process Get the number of processes to be inserted Get the corresponding priority of processes Sort the processes according to the priority and allocate the one with highest priority to execute first If two process have same priority then FCFS scheduling algorithm is used Calculate the total and average waiting time and turnaround time Display the values Stop the process
-
-# PROGRAM:
-```
-#include<stdio.h>
-struct process
-{
-    int WT,AT,BT,TAT,PT;
-};
-
-struct process a[10];
-
-int main()
-{
-    int n,temp[10],t,count=0,short_p;
-    float total_WT=0,total_TAT=0,Avg_WT,Avg_TAT;
-    printf("Enter the number of the process\n");
-    scanf("%d",&n);
-    printf("Enter the arrival time , burst time and priority of the process\n");
-    printf("AT BT PT\n");
-    for(int i=0;i<n;i++)
-    {
-        scanf("%d%d%d",&a[i].AT,&a[i].BT,&a[i].PT);
-        
-        // copying the burst time in
-        // a temp array fot futher use
-        temp[i]=a[i].BT;
-    }
-    
-    // we initialize the burst time
-    // of a process with maximum 
-    a[9].PT=10000;
-    
-    for(t=0;count!=n;t++)
-    {
-        short_p=9;
-        for(int i=0;i<n;i++)
-        {
-            if(a[short_p].PT>a[i].PT && a[i].AT<=t && a[i].BT>0)
-            {
-                short_p=i;
-            }
-        }
-        
-        a[short_p].BT=a[short_p].BT-1;
-        
-        // if any process is completed
-        if(a[short_p].BT==0)
-        {
-            // one process is completed
-            // so count increases by 1
-            count++;
-            a[short_p].WT=t+1-a[short_p].AT-temp[short_p];
-            a[short_p].TAT=t+1-a[short_p].AT;
-            
-            // total calculation
-            total_WT=total_WT+a[short_p].WT;
-            total_TAT=total_TAT+a[short_p].TAT;
-            
-        }
-    }
-    
-    Avg_WT=total_WT/n;
-    Avg_TAT=total_TAT/n;
-    
-    // printing of the answer
-    printf("ID WT TAT\n");
-    for(int i=0;i<n;i++)
-    {
-        printf("%d %d\t%d\n",i+1,a[i].WT,a[i].TAT);
-    }
-    
-    printf("Avg waiting time of the process  is %f\n",Avg_WT);
-    printf("Avg turn around time of the process is %f\n",Avg_TAT);
-    
+    int files[50];
+    for (int i = 0; i < 50; i++)
+        files[i] = 0;
+    printf("Files Allocated are :\n");
+    recurse(files);
     return 0;
 }
 ```
+## OUTPUT:
+![output1](https://github.com/Shrruthilaya-Gangadaran/OS-EX.12-IMPLEMENTATION-OF-FILE-ALLOCATION-METHODS/assets/93427705/bb3f7532-9523-4aa1-9b90-c1c6f6d94baa)
+## RESULT:
+Thus, the implementation of Linked File allocation Methods in C program is done successfully.
+## INDEXED ALLOCATION
+## AIM:
+To implement Indexed File allocation Methods in C program.
 
-# OUTPUT:
-![image](https://github.com/Thanikasreeb/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/119557910/614f8c85-0bb0-487b-a0ba-644ca0abe676)
+## ALGORITHM:
+1. Define an array to represent disk blocks, as well as variables and functions for managing file allocation within index blocks.
+2. In the recurse1 function, ask the user for an index block, check if it's already allocated, and prompt for the number of files needed.
+3. In the recurse2 function, allow the user to select blocks for file allocation within an index block, check if they are available, and allocate the files if free, printing the allocated files.
+4. Handle cases where the selected blocks are already allocated and prompt the user to try again.
+5. After allocating files, ask the user if they want to enter more files; if yes, call recurse1 to continue the process, or exit the program if no more files are to be allocated.
 
-# RESULT:
-Priority Preemptive scheduling is implemented successfully.
-
-# PRIORITY NON - PREEMPTIVE SCHEDULING
-
-# AIM: 
-To implement Priority Non-Preemptive Scheduling
-
-# ALGORITHM:
-Start the process Get the number of processes to be inserted Get the corresponding priority of processes Sort the processes according to the priority and allocate the one with highest priority to execute first If two process have same priority then FCFS scheduling algorithm is used Calculate the total and average waiting time and turnaround time Display the values Stop the process
-
-# PROGRAM:
-```
+## PROGRAM:
+```C
 #include<stdio.h>
- 
-int main()
+#include <conio.h>
+#include<stdlib.h>
+void main()
 {
-    int bt[20],p[20],wt[20],tat[20],pr[20],i,j,n,total=0,pos,temp,avg_wt,avg_tat;
-    printf("Enter Total Number of Process:");
-    scanf("%d",&n);
- 
-    printf("\nEnter Burst Time and Priority\n");
-    for(i=0;i<n;i++)
-    {
-        printf("\nP[%d]\n",i+1);
-        printf("Burst Time:");
-        scanf("%d",&bt[i]);
-        printf("Priority:");
-        scanf("%d",&pr[i]);
-        p[i]=i+1;           
-    }
- 
-    //sorting burst time, priority and process number in ascending order using selection sort
-    for(i=0;i<n;i++)
-    {
-        pos=i;
-        for(j=i+1;j<n;j++)
-        {
-            if(pr[j]<pr[pos])
-                pos=j;
-        }
- 
-        temp=pr[i];
-        pr[i]=pr[pos];
-        pr[pos]=temp;
- 
-        temp=bt[i];
-        bt[i]=bt[pos];
-        bt[pos]=temp;
- 
-        temp=p[i];
-        p[i]=p[pos];
-        p[pos]=temp;
-    }
- 
-    wt[0]=0;	//waiting time for first process is zero
- 
-    //calculate waiting time
-    for(i=1;i<n;i++)
-    {
-        wt[i]=0;
-        for(j=0;j<i;j++)
-            wt[i]+=bt[j];
- 
-        total+=wt[i];
-    }
- 
-    avg_wt=total/n;      //average waiting time
-    total=0;
- 
-    printf("\nProcess\t    Burst Time    \tWaiting Time\tTurnaround Time");
-    for(i=0;i<n;i++)
-    {
-        tat[i]=bt[i]+wt[i];     //calculate turnaround time
-        total+=tat[i];
-        printf("\nP[%d]\t\t  %d\t\t    %d\t\t\t%d",p[i],bt[i],wt[i],tat[i]);
-    }
- 
-    avg_tat=total/n;     //average turnaround time
-    printf("\n\nAverage Waiting Time=%d",avg_wt);
-    printf("\nAverage Turnaround Time=%d\n",avg_tat);
- 
-	return 0;
+int f[50], index[50],i, n, st, len, j, c, k, ind,count=0;
+for(i=0;i<50;i++)
+f[i]=0;
+x:printf("Enter the index block: ");
+scanf("%d",&ind);
+if(f[ind]!=1)
+{
+printf("Enter no of blocks needed and no of files for the index %d on the disk : \n", ind);
+scanf("%d",&n);
+}
+else
+{
+printf("%d index is already allocated \n",ind);
+goto x;
+}
+y: count=0;
+for(i=0;i<n;i++)
+{
+scanf("%d", &index[i]);
+if(f[index[i]]==0)
+count++;
+}
+if(count==n)
+{
+for(j=0;j<n;j++)
+f[index[j]]=1;
+printf("Allocated\n");
+printf("File Indexed\n");
+for(k=0;k<n;k++)
+printf("%d ------- >%d : %d\n",ind,index[k],f[index[k]]);
+}
+else
+{
+printf("File in the index is already allocated \n");
+printf("Enter another file indexed");
+goto y;
+}
+printf("Do you want to enter more file(Yes - 1/No - 0)");
+scanf("%d", &c);
+if(c==1)
+goto x;
+else
+exit(0);
+getch();
 }
 ```
+## OUTPUT:
+![output2](https://github.com/Shrruthilaya-Gangadaran/OS-EX.12-IMPLEMENTATION-OF-FILE-ALLOCATION-METHODS/assets/93427705/aec236a9-05aa-4a0b-b7ff-bd97a3373807)
+## RESULT:
+Thus, the implementation of Indexed File allocation Methods in C program is done successfully.
+## LINKED FILE ALLOCATION
+## AIM:
+To implement file management using Linked list.
+## ALGORITHM:
+1. The program initializes an array f to represent the free blocks on the disk and sets all blocks to 0 (free).
+2. The user is asked to enter the number of blocks already allocated and then to input the blocks that are already allocated (marked as 1 in the f array).
+3. It uses a label x to allow the user to repeatedly enter the starting block and length for files to allocate.
+4. For each file, it checks if the starting block is free; if so, it allocates consecutive blocks and marks them as allocated (1) in the f array. It also prints the allocated blocks. If a block is already allocated, it continues to allocate the file in the next available block.
+5. After allocating a file, the program asks if the user wants to enter more files (1 for Yes, 0 for No). If the user chooses to enter more files, it jumps to label x, allowing the process to repeat. If the user decides not to enter more files, the program exits.
+## PROGRAM:
+```C
+#include <stdio.h>
+#include <stdlib.h>
+int main(){
+    int f[50], p, i, st, len, j, c, k, a;
+    for (i = 0; i < 50; i++)
+        f[i] = 0;
+    printf("Enter how many blocks already allocated: ");
+    scanf("%d", &p);
+    printf("Enter blocks already allocated: ");
+    for (i = 0; i < p; i++) {
+        scanf("%d", &a);
+        f[a] = 1;
+    }
+x:
+    printf("Enter index starting block and length: ");
+    scanf("%d%d", &st, &len);
+    k = len;
+    if (f[st] == 0)
+    {
+        for (j = st; j < (st + k); j++){
+            if (f[j] == 0){
+                f[j] = 1;
+                printf("%d-------->%d\n", j, f[j]);
+            }
+            else{
+                printf("%d Block is already allocated \n", j);
+                k++;
+            }
+        }
+    }
+    else
+        printf("%d starting block is already allocated \n", st);
+    printf("Do you want to enter more file(Yes - 1/No - 0)");
+    scanf("%d", &c);
+    if (c == 1)
+        goto x;
+    else
+        exit(0);
+    return 0;
+}
+```
+## OUTPUT:
+![output6](https://github.com/Shrruthilaya-Gangadaran/OS-EX.12-IMPLEMENTATION-OF-FILE-ALLOCATION-METHODS/assets/93427705/a7b71226-8ebf-4b67-a15a-72e3ec53ff07)
+## RESULT:
+Thus, the implementation of Linked File allocation Methods in C program is done successfully.
+## SEQUENTIAL FILE ALLOCATION
+## AIM:
+To implement Sequential File allocation Methods in C program.
+## ALGORITHM:
+1. Define an array to represent free blocks on a disk and create a function recurse for handling file allocation.
+2. In the recurse function, ask the user for the starting block and length of files they want to allocate.
+3. Check if the specified blocks are available for the entire file length, and allocate the file if they are, marking the blocks as allocated.
+4. If the required blocks are not available for the entire file length, inform the user that allocation is not possible.
+5.  After allocating a file, ask the user if they want to allocate more files (1 for yes, 0 for no), and either call recurse again or exit the program accordingly.
+## PROGRAM:
+```C
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+void recurse(int files[]){
+    int flag = 0, startBlock, len, j, k, ch;
+    printf("Enter the starting block and the length of the files: ");
+    scanf("%d%d", &startBlock, &len);
+    for (j=startBlock; j<(startBlock+len); j++){
+        if (files[j] == 0)
+            flag++;
+    }
+    if(len == flag){
+        for (int k=startBlock; k<(startBlock+len); k++){
+            if (files[k] == 0){
+                files[k] = 1;
+                printf("%d\t%d\n", k, files[k]);
+            }
+        }
+        if (k != (startBlock+len-1))
+            printf("The file is allocated to the disk\n");
+    }
+    else
+        printf("The file is not allocated to the disk\n");
+    printf("Do you want to enter more files?\n");
+    printf("Press 1 for YES, 0 for NO: ");
+    scanf("%d", &ch);
+    if (ch == 1)
+        recurse(files);
+    else
+        exit(0);
+    return;
+}
+int main()
+{
+int files[50];
+for(int i=0;i<50;i++)
+files[i]=0;
+printf("Files Allocated are :\n");
 
-# OUTPUT:
-![image](https://github.com/Thanikasreeb/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/119557910/a6106216-f3a5-4218-bf66-5b0ca858272d)
-
-# RESULT: 
-Priority Non-preemptive scheduling is implemented successfully.
+recurse(files);
+getch();
+return 0;
+}
+```
+## OUTPUT:
+![output5](https://github.com/Shrruthilaya-Gangadaran/OS-EX.12-IMPLEMENTATION-OF-FILE-ALLOCATION-METHODS/assets/93427705/c9e1aa9c-c6e2-419b-83ee-4a8db7b30bbc)
+## RESULT:
+Thus, the implementation of Sequential File allocation Methods in C program is done successfully.
