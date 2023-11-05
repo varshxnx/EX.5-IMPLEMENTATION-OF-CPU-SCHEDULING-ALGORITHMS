@@ -75,7 +75,8 @@ printf("\n Average waiting time is %5.2f\n average tat is%5.2f",awt,atat); }
 
 ## OUTPUT:
 
-![image](https://github.com/Shrruthilaya-Gangadaran/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/93427705/6af9577b-fab5-4248-8afd-d0a424302e69)
+![5fcfs](https://github.com/varshxnx/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/122253525/9dee6dc7-51f8-491c-ae1f-7bd9bb37bf0b)
+
 
 # SHORTEST JOB SCHEDULING (SJF) PRE-EMPTIVE SCHEDULING:
 ## AIM:
@@ -161,7 +162,8 @@ printf("\nAverage turn around time is %5.2f",att);
 }
 ```
 ## OUTPUT:
-![image](https://github.com/Shrruthilaya-Gangadaran/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/93427705/fb748a7d-5d70-40f3-85a8-d0c2fdc8a92f)
+![5b](https://github.com/varshxnx/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/122253525/75c58683-076e-459b-85ef-ff514fd3a12c)
+
 
 
 ## RESULT: 
@@ -281,8 +283,7 @@ int main() {
 
 ## OUTPUT:
 
-![image](https://github.com/Shrruthilaya-Gangadaran/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/93427705/caf37ba3-ceff-42f3-b4ab-7fd1831231bd)
-
+![5c-](https://github.com/varshxnx/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/122253525/ec1b6f58-0e64-49dd-87c5-8386987dbece)
 
 ## RESULT: 
 Shortest Job First (SJF) Non pre-emptive scheduling is implemented successfully.
@@ -445,13 +446,14 @@ printf("\nAvg turn around time is %5.2f",atat);
 
 ## OUTPUT:
 
-![image](https://github.com/Shrruthilaya-Gangadaran/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/93427705/15d293e9-6c56-4044-9b0b-54bb707a6959)
+![5rr](https://github.com/varshxnx/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/122253525/8e71e409-3a02-4df4-8e2e-5cc5b12501e5)
+
 
 
 ## RESULT: 
 Round Robin (RR) Scheduling is implemented successfully.
 
-# PRIORITY PRE-EMPTIVE SCHEDULING:
+# IMPLEMENTATION OF PRIORITY PRE-EMPTIVE SCHEDULING:
 ## AIM: 
 To implement Priority Preemptive Scheduling
 
@@ -562,12 +564,12 @@ int main() {
 
 ## OUTPUT:
 
-![image](https://github.com/Shrruthilaya-Gangadaran/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/93427705/7bebec40-051a-4fa3-ba89-449596a299d3)
+![5e](https://github.com/varshxnx/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/122253525/d870f88f-4629-4c92-9289-4054f555354e)
 
 ## RESULT: 
 Priority Pre-emptive scheduling is implemented successfully.
 
-# PRIORITY NON PRE-EMPTIVE SCHEDULING:
+# IMPLEMENTATION OF PRIORITY NON PRE-EMPTIVE SCHEDULING:
 ## AIM: 
 To implement Priority Non Pre-emptive Scheduling
 
@@ -679,7 +681,8 @@ printf("The average turn around time is: %5.2f",atat);
 ```
 
 ## OUTPUT:
-![image](https://github.com/Shrruthilaya-Gangadaran/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/93427705/89d5e59f-adaf-4511-8109-adea857acb0a)
+![5f](https://github.com/varshxnx/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/122253525/f0c8e972-89c6-432a-b97d-07d21b01a553)
+
 
 
 ## RESULT: 
